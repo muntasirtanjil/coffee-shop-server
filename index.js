@@ -43,7 +43,7 @@ async function run() {
             const query = { _id: new ObjectId(id) };
             const result = await coffeeCollection.findOne(query);
             res.send(result)
-        })
+        });
 
 
 
@@ -52,7 +52,19 @@ async function run() {
             console.log(newCoffee);
             const result = await coffeeCollection.insertOne(newCoffee);
             res.send(result);
-        })
+        });
+        app.put('/coffees/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedCoffee = req.body;
+            const options = { upsert: true }
+            const updateDoc = {
+                $set: updatedCoffee
+            };
+            const result = await coffeeCollection.updateOne(filter, updateDoc,options);
+            res.send(result)
+        });
+
 
         app.delete('/coffees/:id', async (req, res) => {
             const id = req.params.id;
